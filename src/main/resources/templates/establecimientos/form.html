@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{base :: head('Formulario Establecimiento')}"></head>
+
+<body>
+
+<div th:replace="~{base :: layout(~{::section})}">
+  <section>
+
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title"
+            th:text="${establecimiento.codigoEst == null ? 'Establecimiento nuevo' : 'Editar Establecimiento'}"></h4>
+
+        <form id="frmEst"
+              th:action="@{/establecimientos/guardar}"
+              th:object="${establecimiento}"
+              method="post" novalidate>
+
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+          <input type="hidden" th:field="*{codigoEst}"/>
+
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Descripción <span class="text-danger">*</span></label>
+              <input class="form-control" th:field="*{descripcionEst}" name="descripcionEst" id="descripcionEst" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Estado <span class="text-danger">*</span></label>
+              <select class="form-select" th:field="*{estadoEst}" name="estadoEst" id="estadoEst" required>
+                <option value="">-- Seleccione --</option>
+                <option value="ACTIVO">ACTIVO</option>
+                <option value="INACTIVO">INACTIVO</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Ciudad <span class="text-danger">*</span></label>
+              <input class="form-control" th:field="*{ciudadEst}" name="ciudadEst" id="ciudadEst" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Teléfono <span class="text-danger">*</span></label>
+              <input class="form-control" th:field="*{telefonoEst}" name="telefonoEst" id="telefonoEst" maxlength="10" required>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Dirección <span class="text-danger">*</span></label>
+              <input class="form-control" th:field="*{direccionEst}" name="direccionEst" id="direccionEst" required>
+            </div>
+
+          </div>
+
+          <div class="d-flex gap-2 mt-4">
+            <button class="btn btn-primary btn-sm" type="submit">
+              <i class="ti-save"></i> Guardar
+            </button>
+            <a class="btn btn-secondary btn-sm" th:href="@{/establecimientos}">Cancelar</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </section>
+</div>
+
+<!-- ✅ Script DESPUÉS del layout -->
+<script>
+  $.validator.setDefaults({
+    errorElement: "div",
+    errorClass: "invalid-feedback",
+    highlight: function(el){ $(el).addClass("is-invalid"); },
+    unhighlight: function(el){ $(el).removeClass("is-invalid"); },
+    errorPlacement: function(error, element){ error.insertAfter(element); }
+  });
+
+  $(function(){
+    $("#frmEst").validate({
+      rules: {
+        descripcionEst: { required:true, minlength:3 },
+        estadoEst: { required:true },
+        ciudadEst: { required:true, minlength:2 },
+        telefonoEst: { required:true, digits:true, minlength:7, maxlength:10 },
+        direccionEst: { required:true, minlength:5 }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
