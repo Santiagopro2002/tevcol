@@ -21,6 +21,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/assets/**", "/favicon.ico").permitAll()
+                .requestMatchers("/dashboard-powerbi").authenticated()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
