@@ -19,6 +19,332 @@
   <!-- Skydash main css -->
   <link rel="stylesheet" th:href="@{/assets/css/style.css}">
   <link rel="shortcut icon" th:href="@{/assets/images/favicon.png}" />
+
+  <!-- NUEVO: script temprano para evitar parpadeo al cargar tema -->
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('tevcol_theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark-mode');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- NUEVO: estilos modo oscuro (sin tocar tus librerías) -->
+  <style>
+    /* =========================
+       MODO OSCURO TEVCOL (PRO)
+       ========================= */
+    html.dark-mode,
+    body.dark-mode {
+      background: #0f172a !important;
+      color: #e5e7eb !important;
+    }
+
+    body.dark-mode {
+      color-scheme: dark;
+    }
+
+    /* Fondos principales */
+    body.dark-mode,
+    body.dark-mode .container-scroller,
+    body.dark-mode .container-fluid,
+    body.dark-mode .page-body-wrapper,
+    body.dark-mode .main-panel,
+    body.dark-mode .content-wrapper {
+      background: #0f172a !important;
+    }
+
+    /* Navbar / Sidebar / Footer */
+    body.dark-mode .navbar {
+      background: #111827 !important;
+      border-bottom: 1px solid #1f2937 !important;
+    }
+
+    body.dark-mode .navbar .navbar-menu-wrapper,
+    body.dark-mode .navbar .navbar-brand-wrapper {
+      background: #111827 !important;
+    }
+
+    body.dark-mode .sidebar {
+      background: #111827 !important;
+      border-right: 1px solid #1f2937 !important;
+    }
+
+    body.dark-mode .sidebar .nav .nav-item .nav-link {
+      color: #e5e7eb !important;
+      background: transparent !important;
+      border-radius: 10px;
+      transition: all .2s ease;
+    }
+
+    body.dark-mode .sidebar .nav .nav-item .nav-link .menu-title,
+    body.dark-mode .sidebar .nav .nav-item .nav-link i {
+      color: #e5e7eb !important;
+    }
+
+    body.dark-mode .sidebar .nav .nav-item .nav-link:hover {
+      background: #1f2937 !important;
+      color: #ffffff !important;
+    }
+
+    body.dark-mode .sidebar .nav .nav-item.active > .nav-link,
+    body.dark-mode .sidebar .nav .nav-item .nav-link.active {
+      background: #1e293b !important;
+      color: #fff !important;
+      border-left: 3px solid #3b82f6;
+    }
+
+    body.dark-mode .footer {
+      background: #111827 !important;
+      border-top: 1px solid #1f2937 !important;
+    }
+
+    body.dark-mode .footer .text-muted {
+      color: #cbd5e1 !important;
+    }
+
+    /* Textos generales */
+    body.dark-mode h1,
+    body.dark-mode h2,
+    body.dark-mode h3,
+    body.dark-mode h4,
+    body.dark-mode h5,
+    body.dark-mode h6,
+    body.dark-mode p,
+    body.dark-mode span,
+    body.dark-mode label,
+    body.dark-mode small,
+    body.dark-mode .text-dark,
+    body.dark-mode .page-title,
+    body.dark-mode .card-title {
+      color: #e5e7eb !important;
+    }
+
+    body.dark-mode .text-muted {
+      color: #94a3b8 !important;
+    }
+
+    /* Cards, boxes, modals */
+    body.dark-mode .card,
+    body.dark-mode .modal-content,
+    body.dark-mode .swal2-popup,
+    body.dark-mode .dropdown-menu,
+    body.dark-mode .navbar-dropdown {
+      background: #111827 !important;
+      color: #e5e7eb !important;
+      border: 1px solid #1f2937 !important;
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+    }
+
+    body.dark-mode .dropdown-divider {
+      border-top-color: #243042 !important;
+    }
+
+    body.dark-mode .dropdown-item {
+      color: #e5e7eb !important;
+    }
+
+    body.dark-mode .dropdown-item:hover,
+    body.dark-mode .dropdown-item:focus {
+      background: #1f2937 !important;
+      color: #ffffff !important;
+    }
+
+    /* Formularios */
+    body.dark-mode .form-control,
+    body.dark-mode .form-select,
+    body.dark-mode select,
+    body.dark-mode textarea,
+    body.dark-mode input {
+      background: #0b1220 !important;
+      color: #e5e7eb !important;
+      border: 1px solid #334155 !important;
+    }
+
+    body.dark-mode .form-control::placeholder,
+    body.dark-mode input::placeholder,
+    body.dark-mode textarea::placeholder {
+      color: #94a3b8 !important;
+    }
+
+    body.dark-mode .form-control:focus,
+    body.dark-mode .form-select:focus,
+    body.dark-mode input:focus,
+    body.dark-mode textarea:focus,
+    body.dark-mode select:focus {
+      background: #0b1220 !important;
+      color: #fff !important;
+      border-color: #3b82f6 !important;
+      box-shadow: 0 0 0 .2rem rgba(59,130,246,.18) !important;
+    }
+
+    /* Tablas */
+    body.dark-mode table,
+    body.dark-mode .table {
+      color: #e5e7eb !important;
+      background: transparent !important;
+    }
+
+    body.dark-mode .table thead th {
+      background: #111827 !important;
+      color: #f8fafc !important;
+      border-color: #243042 !important;
+    }
+
+    body.dark-mode .table td,
+    body.dark-mode .table th {
+      border-color: #243042 !important;
+    }
+
+    body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+      background-color: rgba(255,255,255,.02) !important;
+    }
+
+    /* DataTables */
+    body.dark-mode .dataTables_wrapper,
+    body.dark-mode .dataTables_wrapper .dataTables_info,
+    body.dark-mode .dataTables_wrapper .dataTables_length,
+    body.dark-mode .dataTables_wrapper .dataTables_filter,
+    body.dark-mode .dataTables_wrapper .dataTables_paginate {
+      color: #e5e7eb !important;
+    }
+
+    body.dark-mode .dataTables_wrapper .dataTables_filter input,
+    body.dark-mode .dataTables_wrapper .dataTables_length select {
+      background: #0b1220 !important;
+      color: #e5e7eb !important;
+      border: 1px solid #334155 !important;
+    }
+
+    body.dark-mode .page-link {
+      background: #111827 !important;
+      color: #e5e7eb !important;
+      border-color: #334155 !important;
+    }
+
+    body.dark-mode .page-item.active .page-link {
+      background: #2563eb !important;
+      border-color: #2563eb !important;
+      color: #fff !important;
+    }
+
+    body.dark-mode .page-item.disabled .page-link {
+      background: #0f172a !important;
+      color: #64748b !important;
+      border-color: #243042 !important;
+    }
+
+    /* Botones secundarios */
+    body.dark-mode .btn-light {
+      background: #1f2937 !important;
+      border-color: #334155 !important;
+      color: #e5e7eb !important;
+    }
+
+    body.dark-mode .btn-outline-secondary {
+      color: #e5e7eb !important;
+      border-color: #475569 !important;
+    }
+
+    body.dark-mode .btn-outline-secondary:hover {
+      background: #1f2937 !important;
+      color: #fff !important;
+    }
+
+    /* Links */
+    body.dark-mode a {
+      color: #93c5fd;
+    }
+
+    body.dark-mode a:hover {
+      color: #bfdbfe;
+    }
+
+    /* SweetAlert modo oscuro */
+    body.dark-mode .swal2-title,
+    body.dark-mode .swal2-html-container {
+      color: #e5e7eb !important;
+    }
+
+    /* Toggle de tema en dropdown */
+    .theme-toggle-btn {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .theme-toggle-btn .theme-toggle-left {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .theme-switch-pill {
+      min-width: 54px;
+      height: 26px;
+      border-radius: 999px;
+      position: relative;
+      border: 1px solid #d1d5db;
+      background: #e5e7eb;
+      transition: all .25s ease;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .theme-switch-pill::after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ffffff;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      box-shadow: 0 2px 6px rgba(0,0,0,.25);
+      transition: all .25s ease;
+    }
+
+    .theme-switch-pill.is-on {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    .theme-switch-pill.is-on::after {
+      left: 30px;
+      background: #fff;
+    }
+
+    .theme-switch-state {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .4px;
+      margin-left: .45rem;
+      opacity: .9;
+    }
+
+    body.dark-mode .theme-toggle-btn .theme-switch-state {
+      color: #bfdbfe !important;
+    }
+
+    /* Pequeños detalles pro */
+    body.dark-mode .navbar .nav-link img {
+      border: 2px solid #334155;
+      box-shadow: 0 0 0 2px rgba(59,130,246,.15);
+      border-radius: 50%;
+    }
+
+    body.dark-mode .content-wrapper .card,
+    body.dark-mode .content-wrapper > div > .row > div > .card {
+      border-radius: 12px;
+    }
+
+    /* Si hay hr */
+    body.dark-mode hr {
+      border-color: #243042 !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -62,6 +388,23 @@
           <div class="dropdown-item text-muted small">
             Usuario: <b th:text="${usuarioLogeado != null ? usuarioLogeado : '-'}">-</b>
           </div>
+          <div class="dropdown-divider"></div>
+
+          <!-- NUEVO: BOTÓN MODO OSCURO -->
+          <button type="button"
+                  id="themeToggleBtn"
+                  class="dropdown-item d-flex align-items-center justify-content-between theme-toggle-btn">
+            <span class="theme-toggle-left">
+              <i id="themeToggleIcon" class="mdi mdi-weather-night"></i>
+              <span id="themeToggleText">Modo oscuro</span>
+            </span>
+
+            <span class="d-flex align-items-center">
+              <span id="themeTogglePill" class="theme-switch-pill" aria-hidden="true"></span>
+              <span id="themeToggleState" class="theme-switch-state">OFF</span>
+            </span>
+          </button>
+
           <div class="dropdown-divider"></div>
 
           <!-- LOGOUT -->
@@ -108,8 +451,6 @@
         <span class="menu-title">Dashboard Power BI</span>
       </a>
     </li>
-
-    
 
     <!-- NUEVO: Cerrar sesión en menú izquierdo (respaldo) -->
     <li class="nav-item">
@@ -200,6 +541,80 @@
             trigger.setAttribute('aria-expanded', 'false');
           }
         });
+      });
+    })();
+  </script>
+
+  <!-- NUEVO: funcionalidad modo oscuro (persistente) -->
+  <script>
+    (function () {
+      var STORAGE_KEY = 'tevcol_theme';
+
+      function isDark() {
+        return document.body.classList.contains('dark-mode');
+      }
+
+      function setTheme(mode) {
+        var dark = (mode === 'dark');
+
+        // Aplicar clase en html + body
+        document.documentElement.classList.toggle('dark-mode', dark);
+        document.body.classList.toggle('dark-mode', dark);
+
+        // Actualizar UI del botón (si existe)
+        var icon = document.getElementById('themeToggleIcon');
+        var text = document.getElementById('themeToggleText');
+        var state = document.getElementById('themeToggleState');
+        var pill = document.getElementById('themeTogglePill');
+
+        if (icon) {
+          icon.className = dark ? 'mdi mdi-white-balance-sunny' : 'mdi mdi-weather-night';
+        }
+        if (text) {
+          text.textContent = dark ? 'Modo claro' : 'Modo oscuro';
+        }
+        if (state) {
+          state.textContent = dark ? 'ON' : 'OFF';
+        }
+        if (pill) {
+          pill.classList.toggle('is-on', dark);
+        }
+
+        // Guardar preferencia
+        try {
+          localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');
+        } catch (e) {}
+      }
+
+      function initTheme() {
+        var saved = null;
+        try {
+          saved = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+
+        // Si no hay preferencia guardada, opcional: respeta sistema
+        if (!saved) {
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          saved = prefersDark ? 'dark' : 'light';
+        }
+
+        setTheme(saved);
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        initTheme();
+
+        var btn = document.getElementById('themeToggleBtn');
+        if (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation(); // para que no cierre el dropdown inmediatamente
+            setTheme(isDark() ? 'light' : 'dark');
+          });
+        }
+
+        // Bonus: si quieres cerrar el dropdown al hacer click otra vez, no hacemos nada aquí
+        // porque el stopPropagation es para que el usuario vea el cambio en vivo.
       });
     })();
   </script>
