@@ -6,6 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title th:text="${title}">TEVCOL</title>
 
+  <!-- APLICAR TEMA ANTES DE RENDER (evita parpadeo entre páginas) -->
+  <script>
+    (function () {
+      try {
+        var savedTheme = localStorage.getItem('tevcold_theme');
+        if (savedTheme === 'dark') {
+          document.documentElement.classList.add('dark-mode');
+          document.documentElement.setAttribute('data-bs-theme', 'dark');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- Skydash vendor css -->
   <link rel="stylesheet" th:href="@{/assets/vendors/feather/feather.css}">
   <link rel="stylesheet" th:href="@{/assets/vendors/ti-icons/css/themify-icons.css}">
@@ -20,631 +33,757 @@
   <link rel="stylesheet" th:href="@{/assets/css/style.css}">
   <link rel="shortcut icon" th:href="@{/assets/images/favicon.png}" />
 
-  <!-- NUEVO: script temprano para evitar parpadeo al cargar tema -->
-  <script>
-    (function () {
-      try {
-        var savedTheme = localStorage.getItem('tevcol_theme');
-        if (savedTheme === 'dark') {
-          document.documentElement.classList.add('dark-mode');
-        }
-      } catch (e) { }
-    })();
-  </script>
-
-  <!-- NUEVO: estilos modo oscuro (sin tocar tus librerías) -->
+  <!-- =========================
+       TEMA OSCURO PRO (Bootstrap-like dark)
+       ========================= -->
   <style>
-    /* =========================
-       MODO OSCURO TEVCOL (PRO)
-       ========================= */
-    html.dark-mode,
-    body.dark-mode {
-      background: #0f172a !important;
-      color: #e5e7eb !important;
+    /* Variables estilo Bootstrap 5 dark */
+    html.dark-mode {
+      --td-body-bg: #212529;
+      --td-surface: #2b3035;
+      --td-surface-2: #343a40;
+      --td-surface-3: #3a4148;
+      --td-border: #495057;
+      --td-text: #f8f9fa;
+      --td-text-soft: #ced4da;
+      --td-text-muted: #adb5bd;
+      --td-accent: #6c757d;      /* plomo */
+      --td-accent-2: #5c636a;    /* plomo hover */
+      --td-accent-3: #4b5258;
+      --td-danger: #6c757d;      /* en dark, acciones uniformes plomo */
+      --td-warning: #6c757d;
+      --td-success: #6c757d;
+      --td-primary: #495057;
+      --td-shadow: none;
     }
 
-    body.dark-mode {
-      color-scheme: dark;
+    /* Transición suave */
+    body, .navbar, .sidebar, .main-panel, .content-wrapper, .card, .dropdown-menu, .table, .footer {
+      transition: background-color .18s ease, color .18s ease, border-color .18s ease;
     }
 
-    /* Fondos principales */
-    body.dark-mode,
-    body.dark-mode .container-scroller,
-    body.dark-mode .container-fluid,
-    body.dark-mode .page-body-wrapper,
-    body.dark-mode .main-panel,
-    body.dark-mode .content-wrapper {
-      background: #0f172a !important;
+    /* ===== Base layout ===== */
+    html.dark-mode body {
+      background-color: var(--td-body-bg) !important;
+      color: var(--td-text) !important;
     }
 
-    /* Navbar / Sidebar / Footer */
-    body.dark-mode .navbar {
-      background: #111827 !important;
-      border-bottom: 1px solid #1f2937 !important;
+    html.dark-mode .container-scroller,
+    html.dark-mode .page-body-wrapper,
+    html.dark-mode .main-panel,
+    html.dark-mode .content-wrapper {
+      background: var(--td-body-bg) !important;
+      color: var(--td-text) !important;
     }
 
-    body.dark-mode .navbar .navbar-menu-wrapper,
-    body.dark-mode .navbar .navbar-brand-wrapper {
-      background: #111827 !important;
+    /* Navbar */
+    html.dark-mode .navbar {
+      background: #1b1f23 !important;
+      border-bottom: 1px solid var(--td-border) !important;
+      box-shadow: none !important;
     }
 
-    body.dark-mode .sidebar {
-      background: #111827 !important;
-      border-right: 1px solid #1f2937 !important;
+    html.dark-mode .navbar .navbar-brand-wrapper {
+      background: #1b1f23 !important;
+      border-right: 1px solid rgba(255,255,255,.04);
     }
 
-    body.dark-mode .sidebar .nav .nav-item .nav-link {
-      color: #e5e7eb !important;
+    html.dark-mode .navbar .text-dark {
+      color: var(--td-text) !important;
+    }
+
+    html.dark-mode .navbar .icon-menu,
+    html.dark-mode .navbar .navbar-toggler {
+      color: var(--td-text) !important;
+    }
+
+    /* Sidebar */
+    html.dark-mode .sidebar {
+      background: #1f2328 !important;
+      border-right: 1px solid var(--td-border) !important;
+      box-shadow: none !important;
+    }
+
+    html.dark-mode .sidebar .nav .nav-item .nav-link {
+      color: var(--td-text-soft) !important;
       background: transparent !important;
-      border-radius: 10px;
-      transition: all .2s ease;
+      border-radius: .6rem;
+      margin: 4px 10px;
     }
 
-    body.dark-mode .sidebar .nav .nav-item .nav-link .menu-title,
-    body.dark-mode .sidebar .nav .nav-item .nav-link i {
-      color: #e5e7eb !important;
+    html.dark-mode .sidebar .nav .nav-item .nav-link .menu-title,
+    html.dark-mode .sidebar .nav .nav-item .nav-link i {
+      color: var(--td-text-soft) !important;
     }
 
-    body.dark-mode .sidebar .nav .nav-item .nav-link:hover {
-      background: #1f2937 !important;
-      color: #ffffff !important;
-    }
-
-    body.dark-mode .sidebar .nav .nav-item.active>.nav-link,
-    body.dark-mode .sidebar .nav .nav-item .nav-link.active {
-      background: #1e293b !important;
+    html.dark-mode .sidebar .nav .nav-item.active > .nav-link,
+    html.dark-mode .sidebar .nav .nav-item .nav-link.active,
+    html.dark-mode .sidebar .nav .nav-item .nav-link:hover {
+      background: #2d333b !important;
       color: #fff !important;
-      border-left: 3px solid #3b82f6;
+      box-shadow: none !important;
     }
 
-    body.dark-mode .footer {
-      background: #111827 !important;
-      border-top: 1px solid #1f2937 !important;
-    }
-
-    body.dark-mode .footer .text-muted {
-      color: #cbd5e1 !important;
-    }
-
-    /* Textos generales */
-    body.dark-mode h1,
-    body.dark-mode h2,
-    body.dark-mode h3,
-    body.dark-mode h4,
-    body.dark-mode h5,
-    body.dark-mode h6,
-    body.dark-mode p,
-    body.dark-mode span,
-    body.dark-mode label,
-    body.dark-mode small,
-    body.dark-mode .text-dark,
-    body.dark-mode .page-title,
-    body.dark-mode .card-title {
-      color: #e5e7eb !important;
-    }
-
-    body.dark-mode .text-muted {
-      color: #94a3b8 !important;
-    }
-
-    /* Cards, boxes, modals */
-    body.dark-mode .card,
-    body.dark-mode .modal-content,
-    body.dark-mode .swal2-popup,
-    body.dark-mode .dropdown-menu,
-    body.dark-mode .navbar-dropdown {
-      background: #111827 !important;
-      color: #e5e7eb !important;
-      border: 1px solid #1f2937 !important;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, .35);
-    }
-
-    body.dark-mode .dropdown-divider {
-      border-top-color: #243042 !important;
-    }
-
-    body.dark-mode .dropdown-item {
-      color: #e5e7eb !important;
-    }
-
-    body.dark-mode .dropdown-item:hover,
-    body.dark-mode .dropdown-item:focus {
-      background: #1f2937 !important;
-      color: #ffffff !important;
-    }
-
-    /* Formularios */
-    body.dark-mode .form-control,
-    body.dark-mode .form-select,
-    body.dark-mode select,
-    body.dark-mode textarea,
-    body.dark-mode input {
-      background: #0b1220 !important;
-      color: #e5e7eb !important;
-      border: 1px solid #334155 !important;
-    }
-
-    body.dark-mode .form-control::placeholder,
-    body.dark-mode input::placeholder,
-    body.dark-mode textarea::placeholder {
-      color: #94a3b8 !important;
-    }
-
-    body.dark-mode .form-control:focus,
-    body.dark-mode .form-select:focus,
-    body.dark-mode input:focus,
-    body.dark-mode textarea:focus,
-    body.dark-mode select:focus {
-      background: #0b1220 !important;
-      color: #fff !important;
-      border-color: #3b82f6 !important;
-      box-shadow: 0 0 0 .2rem rgba(59, 130, 246, .18) !important;
-    }
-
-    /* Tablas */
-    body.dark-mode table,
-    body.dark-mode .table {
-      color: #e5e7eb !important;
-      background: transparent !important;
-    }
-
-    body.dark-mode .table thead th {
-      background: #111827 !important;
-      color: #f8fafc !important;
-      border-color: #243042 !important;
-    }
-
-    body.dark-mode .table td,
-    body.dark-mode .table th {
-      border-color: #243042 !important;
-    }
-
-    body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
-      background-color: rgba(255, 255, 255, .02) !important;
-    }
-
-    /* DataTables */
-    body.dark-mode .dataTables_wrapper,
-    body.dark-mode .dataTables_wrapper .dataTables_info,
-    body.dark-mode .dataTables_wrapper .dataTables_length,
-    body.dark-mode .dataTables_wrapper .dataTables_filter,
-    body.dark-mode .dataTables_wrapper .dataTables_paginate {
-      color: #e5e7eb !important;
-    }
-
-    body.dark-mode .dataTables_wrapper .dataTables_filter input,
-    body.dark-mode .dataTables_wrapper .dataTables_length select {
-      background: #0b1220 !important;
-      color: #e5e7eb !important;
-      border: 1px solid #334155 !important;
-    }
-
-    body.dark-mode .page-link {
-      background: #111827 !important;
-      color: #e5e7eb !important;
-      border-color: #334155 !important;
-    }
-
-    body.dark-mode .page-item.active .page-link {
-      background: #2563eb !important;
-      border-color: #2563eb !important;
+    html.dark-mode .sidebar .nav .nav-item.active > .nav-link .menu-title,
+    html.dark-mode .sidebar .nav .nav-item.active > .nav-link i,
+    html.dark-mode .sidebar .nav .nav-item .nav-link:hover .menu-title,
+    html.dark-mode .sidebar .nav .nav-item .nav-link:hover i {
       color: #fff !important;
     }
 
-    body.dark-mode .page-item.disabled .page-link {
-      background: #0f172a !important;
-      color: #64748b !important;
-      border-color: #243042 !important;
+    /* Fix botón cerrar sesión en sidebar */
+    .sidebar-logout-form {
+      width: 100%;
     }
 
-    /* Botones secundarios */
-    body.dark-mode .btn-light {
-      background: #1f2937 !important;
-      border-color: #334155 !important;
-      color: #e5e7eb !important;
-    }
-
-    body.dark-mode .btn-outline-secondary {
-      color: #e5e7eb !important;
-      border-color: #475569 !important;
-    }
-
-    body.dark-mode .btn-outline-secondary:hover {
-      background: #1f2937 !important;
-      color: #fff !important;
-    }
-
-    /* Links */
-    body.dark-mode a {
-      color: #93c5fd;
-    }
-
-    body.dark-mode a:hover {
-      color: #bfdbfe;
-    }
-
-    /* SweetAlert modo oscuro */
-    body.dark-mode .swal2-title,
-    body.dark-mode .swal2-html-container {
-      color: #e5e7eb !important;
-    }
-
-    /* Toggle de tema en dropdown */
-    .theme-toggle-btn {
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .theme-toggle-btn .theme-toggle-left {
-      display: flex;
+    .sidebar-logout-btn {
+      width: 100%;
+      text-align: left;
+      display: inline-flex;
       align-items: center;
-      gap: .5rem;
+      gap: .45rem;
+      justify-content: flex-start;
+      border-radius: .6rem !important;
+      border: 1px solid transparent;
     }
 
-    .theme-switch-pill {
-      min-width: 54px;
-      height: 26px;
-      border-radius: 999px;
-      position: relative;
-      border: 1px solid #d1d5db;
-      background: #e5e7eb;
-      transition: all .25s ease;
-      display: inline-block;
-      vertical-align: middle;
+    .sidebar-logout-btn i {
+      margin-right: .2rem;
     }
 
-    .theme-switch-pill::after {
-      content: "";
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #ffffff;
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
-      transition: all .25s ease;
+    /* Cuando el sidebar está colapsado (Skydash) */
+    .sidebar-icon-only .sidebar .sidebar-logout-form {
+      display: flex !important;
+      justify-content: center !important;
     }
 
-    .theme-switch-pill.is-on {
-      background: #2563eb;
-      border-color: #2563eb;
+    .sidebar-icon-only .sidebar .sidebar-logout-btn {
+      width: 42px !important;
+      min-width: 42px !important;
+      height: 42px !important;
+      padding: 0 !important;
+      justify-content: center !important;
+      border-radius: 10px !important;
+      margin: 0 auto !important;
     }
 
-    .theme-switch-pill.is-on::after {
-      left: 30px;
-      background: #fff;
+    .sidebar-icon-only .sidebar .sidebar-logout-btn i {
+      margin-right: 0 !important;
     }
 
-    .theme-switch-state {
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .4px;
-      margin-left: .45rem;
-      opacity: .9;
+    .sidebar-icon-only .sidebar .sidebar-link-text {
+      display: none !important;
     }
 
-    body.dark-mode .theme-toggle-btn .theme-switch-state {
-      color: #bfdbfe !important;
+    /* Cards / Contenedores */
+    html.dark-mode .card {
+      background: var(--td-surface) !important;
+      border: 1px solid var(--td-border) !important;
+      box-shadow: none !important; /* quitamos sombras blancas */
     }
 
-    /* Pequeños detalles pro */
-    body.dark-mode .navbar .nav-link img {
-      border: 2px solid #334155;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, .15);
-      border-radius: 50%;
+    html.dark-mode .card .card-body {
+      background: transparent !important;
+      color: var(--td-text) !important;
+      box-shadow: none !important;
     }
 
-    body.dark-mode .content-wrapper .card,
-    body.dark-mode .content-wrapper>div>.row>div>.card {
-      border-radius: 12px;
+    html.dark-mode .table-responsive {
+      background: transparent !important;
+      box-shadow: none !important;
     }
 
-    /* Si hay hr */
-    body.dark-mode hr {
-      border-color: #243042 !important;
+    /* Textos */
+    html.dark-mode h1,
+    html.dark-mode h2,
+    html.dark-mode h3,
+    html.dark-mode h4,
+    html.dark-mode h5,
+    html.dark-mode h6,
+    html.dark-mode label,
+    html.dark-mode .form-label,
+    html.dark-mode .menu-title,
+    html.dark-mode .page-title {
+      color: var(--td-text) !important;
     }
+
+    html.dark-mode .text-muted,
+    html.dark-mode small.text-muted,
+    html.dark-mode .text-muted * {
+      color: var(--td-text-muted) !important;
+    }
+
+    /* Footer */
+    html.dark-mode .footer {
+      background: #1f2328 !important;
+      border-top: 1px solid var(--td-border) !important;
+      box-shadow: none !important;
+    }
+
+    html.dark-mode .footer .text-muted {
+      color: var(--td-text-muted) !important;
+    }
+
+    /* Dropdown perfil */
+    html.dark-mode .dropdown-menu {
+      background: #2b3035 !important;
+      border: 1px solid var(--td-border) !important;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25) !important;
+    }
+
+    html.dark-mode .dropdown-item {
+      color: var(--td-text-soft) !important;
+    }
+
+    html.dark-mode .dropdown-item:hover,
+    html.dark-mode .dropdown-item:focus {
+      background: #343a40 !important;
+      color: #fff !important;
+    }
+
+    html.dark-mode .dropdown-divider {
+      border-top-color: var(--td-border) !important;
+    }
+
+    /* Inputs / forms */
+    html.dark-mode .form-control,
+    html.dark-mode .form-select,
+    html.dark-mode input,
+    html.dark-mode textarea,
+    html.dark-mode select {
+      background-color: #2b3035 !important;
+      color: #f8f9fa !important;
+      border: 1px solid var(--td-border) !important;
+      box-shadow: none !important;
+    }
+
+    html.dark-mode .form-control:focus,
+    html.dark-mode .form-select:focus,
+    html.dark-mode input:focus,
+    html.dark-mode textarea:focus,
+    html.dark-mode select:focus {
+      border-color: #6c757d !important;
+      box-shadow: 0 0 0 .15rem rgba(108,117,125,.25) !important;
+    }
+
+    html.dark-mode ::placeholder {
+      color: #adb5bd !important;
+      opacity: 1;
+    }
+
+    /* Botones: estilo plomo elegante en dark */
+    html.dark-mode .btn {
+      box-shadow: none !important;
+      border-width: 1px !important;
+    }
+
+    html.dark-mode .btn-primary,
+    html.dark-mode .btn-secondary,
+    html.dark-mode .btn-success,
+    html.dark-mode .btn-warning,
+    html.dark-mode .btn-danger,
+    html.dark-mode .btn-info {
+      background-color: #495057 !important;
+      border-color: #6c757d !important;
+      color: #fff !important;
+    }
+
+    html.dark-mode .btn-primary:hover,
+    html.dark-mode .btn-secondary:hover,
+    html.dark-mode .btn-success:hover,
+    html.dark-mode .btn-warning:hover,
+    html.dark-mode .btn-danger:hover,
+    html.dark-mode .btn-info:hover {
+      background-color: #5c636a !important;
+      border-color: #6c757d !important;
+      color: #fff !important;
+    }
+
+    html.dark-mode .btn-primary:focus,
+    html.dark-mode .btn-secondary:focus,
+    html.dark-mode .btn-success:focus,
+    html.dark-mode .btn-warning:focus,
+    html.dark-mode .btn-danger:focus,
+    html.dark-mode .btn-info:focus {
+      box-shadow: 0 0 0 .15rem rgba(108,117,125,.30) !important;
+    }
+
+    html.dark-mode .btn-outline-secondary {
+      color: #f8f9fa !important;
+      border-color: #6c757d !important;
+    }
+
+    html.dark-mode .btn-outline-secondary:hover {
+      background: #495057 !important;
+      color: #fff !important;
+    }
+
+    /* ===== DataTables (fix fuerte para que no salga blanco) ===== */
+    html.dark-mode table,
+    html.dark-mode .table {
+      color: var(--td-text) !important;
+      background: transparent !important;
+    }
+
+    html.dark-mode .table-striped tbody tr:nth-of-type(odd),
+    html.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+      background-color: #2b3035 !important;
+      color: var(--td-text) !important;
+    }
+
+    html.dark-mode .table-striped tbody tr:nth-of-type(even),
+    html.dark-mode .table-striped > tbody > tr:nth-of-type(even) {
+      background-color: #252a2f !important;
+      color: var(--td-text) !important;
+    }
+
+    html.dark-mode .table-hover tbody tr:hover,
+    html.dark-mode .table-hover > tbody > tr:hover {
+      background-color: #343a40 !important;
+      color: #fff !important;
+    }
+
+    html.dark-mode .table thead th,
+    html.dark-mode .table tbody td,
+    html.dark-mode .table tbody th,
+    html.dark-mode .table td,
+    html.dark-mode .table th {
+      border-color: var(--td-border) !important;
+      color: var(--td-text) !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    /* DataTables internals */
+    html.dark-mode table.dataTable,
+    html.dark-mode table.dataTable.no-footer {
+      border-color: var(--td-border) !important;
+      background: transparent !important;
+    }
+
+    html.dark-mode table.dataTable thead th,
+    html.dark-mode table.dataTable thead td {
+      color: #f8f9fa !important;
+      border-bottom: 1px solid var(--td-border) !important;
+      background: #212529 !important;
+    }
+
+    html.dark-mode table.dataTable tbody tr,
+    html.dark-mode table.dataTable tbody td,
+    html.dark-mode table.dataTable tbody th {
+      color: #f8f9fa !important;
+      border-color: var(--td-border) !important;
+      box-shadow: none !important;
+    }
+
+    html.dark-mode table.dataTable.display tbody tr.odd,
+    html.dark-mode table.dataTable.stripe tbody tr.odd,
+    html.dark-mode table.dataTable tbody tr.odd {
+      background-color: #2b3035 !important;
+    }
+
+    html.dark-mode table.dataTable.display tbody tr.even,
+    html.dark-mode table.dataTable.stripe tbody tr.even,
+    html.dark-mode table.dataTable tbody tr.even {
+      background-color: #252a2f !important;
+    }
+
+    html.dark-mode table.dataTable tbody tr:hover {
+      background-color: #343a40 !important;
+    }
+
+    html.dark-mode .dataTables_wrapper .dataTables_length,
+    html.dark-mode .dataTables_wrapper .dataTables_filter,
+    html.dark-mode .dataTables_wrapper .dataTables_info,
+    html.dark-mode .dataTables_wrapper .dataTables_processing,
+    html.dark-mode .dataTables_wrapper .dataTables_paginate {
+      color: var(--td-text-soft) !important;
+    }
+
+    html.dark-mode .dataTables_wrapper .dataTables_filter input,
+    html.dark-mode .dataTables_wrapper .dataTables_length select {
+      background: #2b3035 !important;
+      color: #f8f9fa !important;
+      border: 1px solid var(--td-border) !important;
+    }
+
+    html.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button {
+      color: #f8f9fa !important;
+      border: 1px solid transparent !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    html.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    html.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+      background: #495057 !important;
+      color: #fff !important;
+      border-color: #6c757d !important;
+      box-shadow: none !important;
+    }
+
+    html.dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+      background: #343a40 !important;
+      color: #fff !important;
+      border-color: #495057 !important;
+    }
+
+    html.dark-mode .dt-button,
+    html.dark-mode .buttons-excel,
+    html.dark-mode .buttons-pdf,
+    html.dark-mode .buttons-print {
+      background: #495057 !important;
+      color: #fff !important;
+      border: 1px solid #6c757d !important;
+      box-shadow: none !important;
+    }
+
+    html.dark-mode .dt-button:hover,
+    html.dark-mode .buttons-excel:hover,
+    html.dark-mode .buttons-pdf:hover,
+    html.dark-mode .buttons-print:hover {
+      background: #5c636a !important;
+      border-color: #6c757d !important;
+      color: #fff !important;
+    }
+
+    /* Sort icons / flechas */
+    html.dark-mode table.dataTable thead .sorting:before,
+    html.dark-mode table.dataTable thead .sorting:after,
+    html.dark-mode table.dataTable thead .sorting_asc:before,
+    html.dark-mode table.dataTable thead .sorting_asc:after,
+    html.dark-mode table.dataTable thead .sorting_desc:before,
+    html.dark-mode table.dataTable thead .sorting_desc:after {
+      opacity: .65 !important;
+      color: #ced4da !important;
+    }
+
+    /* SweetAlert en dark */
+    html.dark-mode .swal2-popup {
+      background: #2b3035 !important;
+      color: #f8f9fa !important;
+      border: 1px solid #495057 !important;
+    }
+
+    html.dark-mode .swal2-title,
+    html.dark-mode .swal2-html-container {
+      color: #f8f9fa !important;
+    }
+
+    /* Badge / enlaces */
+    html.dark-mode a:not(.btn):not(.nav-link):not(.dropdown-item) {
+      color: #9ec5fe;
+    }
+
+    html.dark-mode a:not(.btn):not(.nav-link):not(.dropdown-item):hover {
+      color: #cfe2ff;
+    }
+
+    /* Ocultar sombras/efectos blancos del template */
+    html.dark-mode .content-wrapper,
+    html.dark-mode .main-panel,
+    html.dark-mode .card,
+    html.dark-mode .navbar,
+    html.dark-mode .sidebar,
+    html.dark-mode .footer,
+    html.dark-mode .table-responsive,
+    html.dark-mode .table,
+    html.dark-mode .dataTables_wrapper {
+      box-shadow: none !important;
+      background-image: none !important;
+    }
+
+    html.dark-mode nav.navbar,
+html.dark-mode .navbar.default-layout,
+html.dark-mode .navbar.fixed-top {
+  background-color: #1b1f23 !important;
+}
+
+html.dark-mode .navbar .navbar-menu-wrapper {
+  background-color: #1b1f23 !important;
+}
   </style>
 </head>
 
 <body>
 
-  <!-- NAVBAR -->
-  <nav th:fragment="navbar" class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-    <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-      <a class="navbar-brand brand-logo me-5" th:href="@{/empleados}">
-        <img th:src="@{/assets/images/logo.svg}" class="me-2" alt="logo" />
-      </a>
-      <a class="navbar-brand brand-logo-mini" th:href="@{/empleados}">
-        <img th:src="@{/assets/images/logo-mini.svg}" alt="logo" />
-      </a>
-    </div>
+<!-- NAVBAR -->
+<nav th:fragment="navbar" class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+  <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
+    <a class="navbar-brand brand-logo me-5" th:href="@{/empleados}">
+      <img th:src="@{/assets/images/logo.svg}" class="me-2" alt="logo"/>
+    </a>
+    <a class="navbar-brand brand-logo-mini" th:href="@{/empleados}">
+      <img th:src="@{/assets/images/logo-mini.svg}" alt="logo"/>
+    </a>
+  </div>
 
-    <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
-      <!-- BOTÓN MENU (PC / minimizar sidebar) -->
-      <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
-        <span class="icon-menu"></span>
-      </button>
+  <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+    <!-- BOTÓN MENU (PC / minimizar sidebar) -->
+    <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+      <span class="icon-menu"></span>
+    </button>
 
-      <ul class="navbar-nav navbar-nav-right">
-        <!-- PERFIL -->
-        <li class="nav-item nav-profile dropdown">
-          <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="profileDropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" data-toggle="dropdown" data-bs-toggle="dropdown">
-            <span class="d-none d-lg-inline text-dark"
-              th:text="${usuarioLogeado != null ? usuarioLogeado : 'Usuario'}">Usuario</span>
-            <img th:src="@{/assets/images/faces/face28.jpg}" alt="profile" />
-          </a>
+    <ul class="navbar-nav navbar-nav-right">
+      <!-- PERFIL -->
+      <li class="nav-item nav-profile dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+           href="#"
+           id="profileDropdown"
+           role="button"
+           aria-haspopup="true"
+           aria-expanded="false"
+           data-toggle="dropdown"
+           data-bs-toggle="dropdown">
+          <span class="d-none d-lg-inline text-dark"
+                th:text="${usuarioLogeado != null ? usuarioLogeado : 'Usuario'}">Usuario</span>
+          <img th:src="@{/assets/images/faces/face28.jpg}" alt="profile" />
+        </a>
 
-          <!-- usamos ambas clases para compatibilidad bs4/bs5 -->
-          <div class="dropdown-menu dropdown-menu-right dropdown-menu-end navbar-dropdown"
-            aria-labelledby="profileDropdown">
-            <div class="dropdown-item text-muted small">
-              Usuario: <b th:text="${usuarioLogeado != null ? usuarioLogeado : '-'}">-</b>
-            </div>
-            <div class="dropdown-divider"></div>
-
-            <!-- NUEVO: BOTÓN MODO OSCURO -->
-            <button type="button" id="themeToggleBtn"
-              class="dropdown-item d-flex align-items-center justify-content-between theme-toggle-btn">
-              <span class="theme-toggle-left">
-                <i id="themeToggleIcon" class="mdi mdi-weather-night"></i>
-                <span id="themeToggleText">Modo oscuro</span>
-              </span>
-
-              <span class="d-flex align-items-center">
-                <span id="themeTogglePill" class="theme-switch-pill" aria-hidden="true"></span>
-                <span id="themeToggleState" class="theme-switch-state">OFF</span>
-              </span>
-            </button>
-
-            <div class="dropdown-divider"></div>
-
-            <!-- LOGOUT -->
-            <form th:action="@{/logout}" method="post" class="px-3 py-2 m-0">
-              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-              <button type="submit" class="btn btn-danger btn-sm w-100">
-                <i class="ti-power-off text-white"></i> Cerrar sesión
-              </button>
-            </form>
+        <!-- usamos ambas clases para compatibilidad bs4/bs5 -->
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-end navbar-dropdown"
+             aria-labelledby="profileDropdown">
+          <div class="dropdown-item text-muted small">
+            Usuario: <b th:text="${usuarioLogeado != null ? usuarioLogeado : '-'}">-</b>
           </div>
-        </li>
-      </ul>
+          <div class="dropdown-divider"></div>
 
-      <!-- BOTÓN MENU (MÓVIL / offcanvas) -->
-      <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
-        data-toggle="offcanvas">
-        <span class="icon-menu"></span>
-      </button>
-    </div>
-  </nav>
+          <!-- NUEVO: Toggle modo oscuro -->
+          <button type="button" id="themeToggleBtn" class="dropdown-item d-flex align-items-center">
+            <i id="themeToggleIcon" class="ti-moon mr-2"></i>
+            <span id="themeToggleText">Modo oscuro</span>
+          </button>
 
-  <!-- SIDEBAR -->
-  <nav th:fragment="sidebar" class="sidebar sidebar-offcanvas" id="sidebar">
-    <ul class="nav">
+          <div class="dropdown-divider"></div>
 
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/empleados}">
-          <i class="icon-grid menu-icon"></i>
-          <span class="menu-title">Empleados</span>
-        </a>
+          <!-- LOGOUT -->
+          <form th:action="@{/logout}" method="post" class="px-3 py-2 m-0">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn btn-danger btn-sm w-100">
+              <i class="ti-power-off text-white"></i> Cerrar sesión
+            </button>
+          </form>
+        </div>
       </li>
+    </ul>
 
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/establecimientos}">
-          <i class="icon-columns menu-icon"></i>
-          <span class="menu-title">Establecimientos</span>
-        </a>
-      </li>
+    <!-- BOTÓN MENU (MÓVIL / offcanvas) -->
+    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+            type="button" data-toggle="offcanvas">
+      <span class="icon-menu"></span>
+    </button>
+  </div>
+</nav>
 
-      <!-- NUEVO: Dashboard Power BI 
+<!-- SIDEBAR -->
+<nav th:fragment="sidebar" class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/empleados}">
+        <i class="icon-grid menu-icon"></i>
+        <span class="menu-title">Empleados</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/establecimientos}">
+        <i class="icon-columns menu-icon"></i>
+        <span class="menu-title">Establecimientos</span>
+      </a>
+    </li>
+
+    <!-- NUEVO: Dashboard Power BI 
     <li class="nav-item">
       <a class="nav-link" th:href="@{/dashboard-powerbi}">
         <i class="mdi mdi-chart-donut menu-icon"></i>
         <span class="menu-title">Dashboard Power BI</span>
       </a>
-    </li>  -->
+    </li>
+    -->
+    
+    <!-- NUEVO: Cerrar sesión en menú izquierdo (respaldo) -->
+    <li class="nav-item">
+      <div class="nav-link">
+        <form th:action="@{/logout}" method="post" class="w-100 m-0 sidebar-logout-form">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+          <button type="submit" class="btn btn-danger btn-sm sidebar-logout-btn">
+            <i class="ti-power-off"></i>
+            <span class="sidebar-link-text">Cerrar sesión</span>
+          </button>
+        </form>
+      </div>
+    </li>
 
-      <!-- NUEVO: Cerrar sesión en menú izquierdo (respaldo) -->
-      <li class="nav-item">
-        <div class="nav-link">
-          <form th:action="@{/logout}" method="post" class="w-100 m-0">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <button type="submit" class="btn btn-danger btn-sm w-100 text-left">
-              <i class="ti-power-off"></i> Cerrar sesión
-            </button>
-          </form>
-        </div>
-      </li>
+  </ul>
+</nav>
 
-    </ul>
-  </nav>
+<!-- FOOTER -->
+<footer th:fragment="footer" class="footer">
+  <div class="d-sm-flex justify-content-center justify-content-sm-between">
+    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
+      © 2026 TEVCOL - Information Systems | Cristian Aguila - Alejandra Erreyes - UTC
+    </span>
+  </div>
+</footer>
 
-  <!-- FOOTER -->
-  <footer th:fragment="footer" class="footer">
-    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-      <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">
-        © 2026 TEVCOL - Information Systems | Cristian Aguila - Alejandra Erreyes - UTC
-      </span>
-    </div>
-  </footer>
+<!-- SCRIPTS -->
+<div th:fragment="scripts">
+  <!-- Skydash vendor (aquí viene jQuery y Bootstrap del template) -->
+  <script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
 
-  <!-- SCRIPTS -->
-  <div th:fragment="scripts">
-    <!-- Skydash vendor (aquí viene jQuery y Bootstrap del template) -->
-    <script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
+  <!-- jQuery Validate -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/localization/messages_es.min.js"></script>
 
-    <!-- jQuery Validate -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/localization/messages_es.min.js"></script>
+  <!-- SweetAlert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- SweetAlert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- DataTables -->
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
 
-    <!-- DataTables -->
-    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+  <!-- Buttons -->
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
-    <!-- Buttons -->
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+  <!-- Skydash -->
+  <script th:src="@{/assets/js/off-canvas.js}"></script>
+  <script th:src="@{/assets/js/template.js}"></script>
+  <script th:src="@{/assets/js/settings.js}"></script>
 
-    <!-- Skydash -->
-    <script th:src="@{/assets/js/off-canvas.js}"></script>
-    <script th:src="@{/assets/js/template.js}"></script>
-    <script th:src="@{/assets/js/settings.js}"></script>
+  <!-- FIX dropdown perfil (compatibilidad Bootstrap 4/5) -->
+  <script>
+    (function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        var trigger = document.getElementById('profileDropdown');
+        if (!trigger) return;
 
-    <!-- FIX dropdown perfil (compatibilidad Bootstrap 4/5) -->
-    <script>
-      (function () {
-        document.addEventListener('DOMContentLoaded', function () {
-          var trigger = document.getElementById('profileDropdown');
-          if (!trigger) return;
+        // Si es Bootstrap 5
+        if (window.bootstrap && typeof window.bootstrap.Dropdown !== 'undefined') {
+          try { window.bootstrap.Dropdown.getOrCreateInstance(trigger); } catch (e) {}
+          return;
+        }
 
-          // Si es Bootstrap 5
-          if (window.bootstrap && typeof window.bootstrap.Dropdown !== 'undefined') {
-            try { window.bootstrap.Dropdown.getOrCreateInstance(trigger); } catch (e) { }
-            return;
+        // Si es Bootstrap 4 (plugin jQuery)
+        if (window.jQuery && typeof window.jQuery.fn.dropdown === 'function') {
+          try { window.jQuery(trigger).dropdown(); } catch (e) {}
+          return;
+        }
+
+        // Fallback manual por si el plugin no inicializa
+        var menu = trigger.nextElementSibling;
+        if (!menu) return;
+
+        trigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          menu.classList.toggle('show');
+          trigger.setAttribute('aria-expanded', menu.classList.contains('show') ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', function (e) {
+          if (!trigger.contains(e.target) && !menu.contains(e.target)) {
+            menu.classList.remove('show');
+            trigger.setAttribute('aria-expanded', 'false');
           }
+        });
+      });
+    })();
+  </script>
 
-          // Si es Bootstrap 4 (plugin jQuery)
-          if (window.jQuery && typeof window.jQuery.fn.dropdown === 'function') {
-            try { window.jQuery(trigger).dropdown(); } catch (e) { }
-            return;
-          }
+  <!-- MODO OSCURO (persistente + rápido) -->
+  <script>
+    (function () {
+      function getTheme() {
+        try { return localStorage.getItem('tevcold_theme') || 'light'; } catch (e) { return 'light'; }
+      }
 
-          // Fallback manual por si el plugin no inicializa
-          var menu = trigger.nextElementSibling;
-          if (!menu) return;
+      function setTheme(theme) {
+        var isDark = theme === 'dark';
 
-          trigger.addEventListener('click', function (e) {
+        // html (para aplicar antes y durante toda la página)
+        document.documentElement.classList.toggle('dark-mode', isDark);
+        document.documentElement.setAttribute('data-bs-theme', isDark ? 'dark' : 'light');
+
+        // body (cuando ya existe)
+        if (document.body) {
+          document.body.classList.toggle('dark-mode', isDark);
+        }
+
+        try { localStorage.setItem('tevcold_theme', theme); } catch (e) {}
+
+        // Actualizar texto/icono del botón
+        var text = document.getElementById('themeToggleText');
+        var icon = document.getElementById('themeToggleIcon');
+
+        if (text) text.textContent = isDark ? 'Modo claro' : 'Modo oscuro';
+        if (icon) {
+          icon.className = isDark ? 'ti-sun mr-2' : 'ti-moon mr-2';
+        }
+      }
+
+      function initThemeToggle() {
+        // Sincronizar body con html (por si el tema se aplicó en <head>)
+        var htmlIsDark = document.documentElement.classList.contains('dark-mode');
+        if (document.body) document.body.classList.toggle('dark-mode', htmlIsDark);
+
+        // Botón toggle
+        var btn = document.getElementById('themeToggleBtn');
+        if (btn && !btn.dataset.bound) {
+          btn.dataset.bound = '1';
+          btn.addEventListener('click', function (e) {
             e.preventDefault();
-            menu.classList.toggle('show');
-            trigger.setAttribute('aria-expanded', menu.classList.contains('show') ? 'true' : 'false');
+            var next = (getTheme() === 'dark') ? 'light' : 'dark';
+            setTheme(next);
           });
-
-          document.addEventListener('click', function (e) {
-            if (!trigger.contains(e.target) && !menu.contains(e.target)) {
-              menu.classList.remove('show');
-              trigger.setAttribute('aria-expanded', 'false');
-            }
-          });
-        });
-      })();
-    </script>
-
-    <!-- NUEVO: funcionalidad modo oscuro (persistente) -->
-    <script>
-      (function () {
-        var STORAGE_KEY = 'tevcol_theme';
-
-        function isDark() {
-          return document.body.classList.contains('dark-mode');
         }
 
-        function setTheme(mode) {
-          var dark = (mode === 'dark');
+        // Asegurar texto correcto
+        setTheme(getTheme());
+      }
 
-          // Aplicar clase en html + body
-          document.documentElement.classList.toggle('dark-mode', dark);
-          document.body.classList.toggle('dark-mode', dark);
+      document.addEventListener('DOMContentLoaded', initThemeToggle);
+      window.addEventListener('pageshow', initThemeToggle);
+    })();
+  </script>
+</div>
 
-          // Actualizar UI del botón (si existe)
-          var icon = document.getElementById('themeToggleIcon');
-          var text = document.getElementById('themeToggleText');
-          var state = document.getElementById('themeToggleState');
-          var pill = document.getElementById('themeTogglePill');
+<!-- ALERTAS GLOBALES -->
+<div th:fragment="flashAlerts">
+  <script th:if="${error}">
+    Swal.fire({ icon:'error', title:'Error', text:'[[${error}]]' });
+  </script>
+  <script th:if="${success}">
+    Swal.fire({ icon:'success', title:'Correcto', text:'[[${success}]]', timer:1800, showConfirmButton:false });
+  </script>
+</div>
 
-          if (icon) {
-            icon.className = dark ? 'mdi mdi-white-balance-sunny' : 'mdi mdi-weather-night';
-          }
-          if (text) {
-            text.textContent = dark ? 'Modo claro' : 'Modo oscuro';
-          }
-          if (state) {
-            state.textContent = dark ? 'ON' : 'OFF';
-          }
-          if (pill) {
-            pill.classList.toggle('is-on', dark);
-          }
+<!-- LAYOUT PRINCIPAL (1 parámetro como antes) -->
+<div th:fragment="layout(content)">
+  <div class="container-scroller">
+    <div th:replace="~{base :: navbar}"></div>
 
-          // Guardar preferencia
-          try {
-            localStorage.setItem(STORAGE_KEY, dark ? 'dark' : 'light');
-          } catch (e) { }
-        }
+    <div class="container-fluid page-body-wrapper">
+      <div th:replace="~{base :: sidebar}"></div>
 
-        function initTheme() {
-          var saved = null;
-          try {
-            saved = localStorage.getItem(STORAGE_KEY);
-          } catch (e) { }
-
-          // Si no hay preferencia guardada, opcional: respeta sistema
-          if (!saved) {
-            var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            saved = prefersDark ? 'dark' : 'light';
-          }
-
-          setTheme(saved);
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-          initTheme();
-
-          var btn = document.getElementById('themeToggleBtn');
-          if (btn) {
-            btn.addEventListener('click', function (e) {
-              e.preventDefault();
-              e.stopPropagation(); // para que no cierre el dropdown inmediatamente
-              setTheme(isDark() ? 'light' : 'dark');
-            });
-          }
-
-          // Bonus: si quieres cerrar el dropdown al hacer click otra vez, no hacemos nada aquí
-          // porque el stopPropagation es para que el usuario vea el cambio en vivo.
-        });
-      })();
-    </script>
-  </div>
-
-  <!-- ALERTAS GLOBALES -->
-  <div th:fragment="flashAlerts">
-    <script th:if="${error}">
-      Swal.fire({ icon: 'error', title: 'Error', text: '[[${error}]]' });
-    </script>
-    <script th:if="${success}">
-      Swal.fire({ icon: 'success', title: 'Correcto', text: '[[${success}]]', timer: 1800, showConfirmButton: false });
-    </script>
-  </div>
-
-  <!-- LAYOUT PRINCIPAL (1 parámetro como antes) -->
-  <div th:fragment="layout(content)">
-    <div class="container-scroller">
-      <div th:replace="~{base :: navbar}"></div>
-
-      <div class="container-fluid page-body-wrapper">
-        <div th:replace="~{base :: sidebar}"></div>
-
-        <div class="main-panel">
-          <div class="content-wrapper">
-            <div th:replace="${content}"></div>
-          </div>
-
-          <div th:replace="~{base :: footer}"></div>
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div th:replace="${content}"></div>
         </div>
+
+        <div th:replace="~{base :: footer}"></div>
       </div>
     </div>
-
-    <div th:replace="~{base :: scripts}"></div>
-    <div th:replace="~{base :: flashAlerts}"></div>
   </div>
 
-</body>
+  <div th:replace="~{base :: scripts}"></div>
+  <div th:replace="~{base :: flashAlerts}"></div>
+</div>
 
+</body>
 </html>
