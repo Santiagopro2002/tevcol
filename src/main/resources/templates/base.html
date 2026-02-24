@@ -44,22 +44,28 @@
       <!-- PERFIL -->
       <li class="nav-item nav-profile dropdown">
         <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
-           href="javascript:void(0)"
+           href="#"
+           id="profileDropdown"
+           role="button"
+           aria-haspopup="true"
+           aria-expanded="false"
            data-toggle="dropdown"
-           id="profileDropdown">
+           data-bs-toggle="dropdown">
           <span class="d-none d-lg-inline text-dark"
                 th:text="${usuarioLogeado != null ? usuarioLogeado : 'Usuario'}">Usuario</span>
           <img th:src="@{/assets/images/faces/face28.jpg}" alt="profile" />
         </a>
 
-        <div class="dropdown-menu dropdown-menu-end navbar-dropdown" aria-labelledby="profileDropdown">
+        <!-- usamos ambas clases para compatibilidad bs4/bs5 -->
+        <div class="dropdown-menu dropdown-menu-right dropdown-menu-end navbar-dropdown"
+             aria-labelledby="profileDropdown">
           <div class="dropdown-item text-muted small">
             Usuario: <b th:text="${usuarioLogeado != null ? usuarioLogeado : '-'}">-</b>
           </div>
           <div class="dropdown-divider"></div>
 
           <!-- LOGOUT -->
-          <form th:action="@{/logout}" method="post" class="px-3">
+          <form th:action="@{/logout}" method="post" class="px-3 py-2 m-0">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <button type="submit" class="btn btn-danger btn-sm w-100">
               <i class="ti-power-off text-white"></i> Cerrar sesión
@@ -80,6 +86,7 @@
 <!-- SIDEBAR -->
 <nav th:fragment="sidebar" class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
+
     <li class="nav-item">
       <a class="nav-link" th:href="@{/empleados}">
         <i class="icon-grid menu-icon"></i>
@@ -93,6 +100,29 @@
         <span class="menu-title">Establecimientos</span>
       </a>
     </li>
+
+    <!-- NUEVO: Dashboard Power BI -->
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/dashboard-powerbi}">
+        <i class="mdi mdi-chart-donut menu-icon"></i>
+        <span class="menu-title">Dashboard Power BI</span>
+      </a>
+    </li>
+
+    
+
+    <!-- NUEVO: Cerrar sesión en menú izquierdo (respaldo) -->
+    <li class="nav-item">
+      <div class="nav-link">
+        <form th:action="@{/logout}" method="post" class="w-100 m-0">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+          <button type="submit" class="btn btn-danger btn-sm w-100 text-left">
+            <i class="ti-power-off"></i> Cerrar sesión
+          </button>
+        </form>
+      </div>
+    </li>
+
   </ul>
 </nav>
 
@@ -107,7 +137,7 @@
 
 <!-- SCRIPTS -->
 <div th:fragment="scripts">
-  <!--  Skydash vendor (aquí viene jQuery y Bootstrap del template) -->
+  <!-- Skydash vendor (aquí viene jQuery y Bootstrap del template) -->
   <script th:src="@{/assets/vendors/js/vendor.bundle.base.js}"></script>
 
   <!-- jQuery Validate -->
@@ -134,6 +164,45 @@
   <script th:src="@{/assets/js/off-canvas.js}"></script>
   <script th:src="@{/assets/js/template.js}"></script>
   <script th:src="@{/assets/js/settings.js}"></script>
+
+  <!-- FIX dropdown perfil (compatibilidad Bootstrap 4/5) -->
+  <script>
+    (function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        var trigger = document.getElementById('profileDropdown');
+        if (!trigger) return;
+
+        // Si es Bootstrap 5
+        if (window.bootstrap && typeof window.bootstrap.Dropdown !== 'undefined') {
+          try { window.bootstrap.Dropdown.getOrCreateInstance(trigger); } catch (e) {}
+          return;
+        }
+
+        // Si es Bootstrap 4 (plugin jQuery)
+        if (window.jQuery && typeof window.jQuery.fn.dropdown === 'function') {
+          try { window.jQuery(trigger).dropdown(); } catch (e) {}
+          return;
+        }
+
+        // Fallback manual por si el plugin no inicializa
+        var menu = trigger.nextElementSibling;
+        if (!menu) return;
+
+        trigger.addEventListener('click', function (e) {
+          e.preventDefault();
+          menu.classList.toggle('show');
+          trigger.setAttribute('aria-expanded', menu.classList.contains('show') ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', function (e) {
+          if (!trigger.contains(e.target) && !menu.contains(e.target)) {
+            menu.classList.remove('show');
+            trigger.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
+    })();
+  </script>
 </div>
 
 <!-- ALERTAS GLOBALES -->
@@ -146,7 +215,7 @@
   </script>
 </div>
 
-<!-- LAYOUT PRINCIPAL ( 1 parámetro como antes) -->
+<!-- LAYOUT PRINCIPAL (1 parámetro como antes) -->
 <div th:fragment="layout(content)">
   <div class="container-scroller">
     <div th:replace="~{base :: navbar}"></div>
